@@ -16,8 +16,14 @@ while principal > 0:
     payment = 2684.11
     if extra_payment_start_month <= month <= extra_payment_end_month:
         payment += extra_payment
+
+    if principal < payment:
+        total_paid = total_paid + principal
+        principal = 0
+    else:
+        total_paid = total_paid + payment
+        principal = principal * (1+rate/12) - payment
     
-    principal = principal * (1+rate/12) - payment
-    total_paid = total_paid + payment
+    print(f'{month:5d} ${round(total_paid, 2):0.2f} ${principal:0.2f}')
 
 print(f"Total paid {round(total_paid, 2)} over {month} months")
