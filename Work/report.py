@@ -3,41 +3,22 @@
 # Exercise 2.4
 
 import csv
+from fileparse import parse_csv
 
 def read_portfolio(filename):
     '''
     Read a stock portfolio file into a list of dictionaries with keys
     name, shares, and price.
     '''
-    portfolio = []
-    with open(filename) as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-
-        for row in rows:
-            stock = {
-                 'name'   : row[0],
-                 'shares' : int(row[1]),
-                 'price'   : float(row[2])
-            }
-            portfolio.append(stock)
-
+    portfolio = parse_csv(filename ,select=['name','shares','price'], types=[str,int,float])
     return portfolio
 
 def read_prices(filename):
     '''
     Read a CSV file of price data into a dict mapping names to prices.
     '''
-    prices = {}
-    with open(filename) as f:
-        rows = csv.reader(f)
-        for row in rows:
-            try:
-                prices[row[0]] = float(row[1])
-            except IndexError:
-                pass
-
-    return prices
+    prices = parse_csv(filename ,types=[str,float], has_headers=False)
+    return dict(prices)
 
 def make_report_data(portfolio, prices):
     '''
@@ -47,6 +28,7 @@ def make_report_data(portfolio, prices):
     rows = []
     for stock in portfolio:
         current_price = prices[stock['name']]
+        # current_price = prices[stock['name']]
         change = current_price - stock['price']
         summary = (stock['name'], stock['shares'], current_price, change)
         rows.append(summary)

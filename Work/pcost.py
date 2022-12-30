@@ -4,6 +4,7 @@
 
 import csv
 import sys
+import pcost
 
 def portfolio_cost(filename):
     '''Computes the total cost (shares*price) of a portfolio file'''
@@ -26,5 +27,5 @@ if len(sys.argv) == 2:
 else:
     filename = 'Data/portfolio.csv'
 
-cost = portfolio_cost(filename)
+cost = pcost.portfolio_cost(filename)
 print(f'Total purchase cost: {cost:0.2f}')
