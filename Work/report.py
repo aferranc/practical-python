@@ -1,6 +1,7 @@
 # report.py
 
 import fileparse
+import tableformat
 
 
 def read_portfolio(filename):
@@ -39,18 +40,17 @@ def make_report_data(portfolio, prices):
     return rows
 
 
-def print_report(reportdata):
+def print_report(reportdata, formatter):
     """
-    Print a nicely formated table from a list of (name, shares, price, change) tuples.
+    Print a nicely formatted table from a list of (name, shares, price, change) tuples.
     """
-    headers = ("Name", "Shares", "Price", "Change")
-    print("%10s %10s %10s %10s" % headers)
-    print(("-" * 10 + " ") * len(headers))
-    for row in reportdata:
-        print("%10s %10d %10.2f %10.2f" % row)
+    formatter.headings(["Name", "Shares", "Price", "Change"])
+    for name, shares, price, change in reportdata:
+        rowdata = [name, str(shares), f"{price:0.2f}", f"{change:0.2f}"]
+        formatter.row(rowdata)
 
 
-def portfolio_report(portfoliofile, pricefile):
+def portfolio_report(portfoliofile, pricefile, fmt="txt"):
     """
     Make a stock report given portfolio and price data files.
     """
@@ -62,7 +62,8 @@ def portfolio_report(portfoliofile, pricefile):
     report = make_report_data(portfolio, prices)
 
     # Print it out
-    print_report(report)
+    formatter = tableformat.create_formatter(fmt)
+    print_report(report, formatter)
 
 
 def main(args):
